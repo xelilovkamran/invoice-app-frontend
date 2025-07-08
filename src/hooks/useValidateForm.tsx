@@ -14,7 +14,7 @@ type ValidationErrors = {
   emptyItem?: string;
 };
 
-function useValidateForm(data: Omit<TInvoice, "id">) {
+function useValidateForm(data: Omit<TInvoice, "id" | "total">) {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {}
   );

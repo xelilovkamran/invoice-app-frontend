@@ -3,7 +3,6 @@ import "./newInvoice.css";
 import dayjs from "dayjs";
 import { customAlphabet } from "nanoid";
 import React, { useRef, useState } from "react";
-import { toast } from "react-toastify";
 
 import Button from "@/components/buttons/primaryButton/Button";
 import PaymentItem from "@/components/home/paymentItem/PaymentItem";
@@ -23,7 +22,7 @@ function NewInvoice({ reference }: Props) {
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
   const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 6);
 
-  const [formData, setFormData] = useState<Omit<TInvoice, "id">>({
+  const [formData, setFormData] = useState<Omit<TInvoice, "id" | "total">>({
     identifier: nanoid().toUpperCase(),
     createdAt: dayjs().format("YYYY-MM-DD"),
     paymentDue: dayjs().format("YYYY-MM-DD"),
@@ -45,7 +44,7 @@ function NewInvoice({ reference }: Props) {
       country: "",
     },
     items: [],
-    total: 0,
+    // total: 0,
   });
   const { isValid, validationErrors } = useValidateForm(formData);
 
@@ -61,7 +60,7 @@ function NewInvoice({ reference }: Props) {
   });
 
   const clearFormData = () => {
-    const formDataEmpty: Omit<TInvoice, "id"> = {
+    const formDataEmpty: Omit<TInvoice, "id" | "total"> = {
       identifier: nanoid(6).toUpperCase(),
       createdAt: dayjs().format("YYYY-MM-DD"),
       paymentDue: dayjs().format("YYYY-MM-DD"),
@@ -83,7 +82,7 @@ function NewInvoice({ reference }: Props) {
         country: "",
       },
       items: [],
-      total: 0,
+      // total: 0,
     };
 
     setFormData(formDataEmpty);
@@ -109,7 +108,9 @@ function NewInvoice({ reference }: Props) {
       setFormData({
         ...formData,
         [targets[0]]: {
-          ...(formData[targets[0] as keyof Omit<TInvoice, "id">] as TAddress),
+          ...(formData[
+            targets[0] as keyof Omit<TInvoice, "id" | "total">
+          ] as TAddress),
           [targets[1]]: e.target.value,
         },
       });
@@ -147,27 +148,19 @@ function NewInvoice({ reference }: Props) {
     setIsSubmited(true);
 
     if (isValid) {
-      const total = formData.items.reduce(
-        (acc: number, { total }: TPaymentItem) => {
-          return acc + total;
-        },
-        0
-      );
-
       const formDataCopy = {
         ...formData,
-        total,
         status,
       };
 
-      postInvoiceAction(formDataCopy)
-        .unwrap()
-        .then(() => toast.success("Invoice created successfully :)"))
-        .catch((err: Error) => {
-          err.message === "bad connection"
-            ? toast.error("Bad connection")
-            : toast.error("Something went wrong");
-        });
+      postInvoiceAction(formDataCopy);
+      // .unwrap()
+      // .then(() => toast.success("Invoice created successfully :)"))
+      // .catch((err: Error) => {
+      //   err.message === "bad connection"
+      //     ? toast.error("Bad connection")
+      //     : toast.error("Something went wrong");
+      // });
 
       cancelNewInvoice();
       setIsSubmited(false);

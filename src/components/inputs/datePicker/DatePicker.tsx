@@ -13,8 +13,8 @@ dayjs.updateLocale("en", {
 });
 
 type Props = {
-  onChange: React.Dispatch<Omit<TInvoice, "id">>;
-  formData: Omit<TInvoice, "id">;
+  onChange: React.Dispatch<Omit<TInvoice, "id" | "total">>;
+  formData: Omit<TInvoice, "id" | "total">;
   value: Dayjs;
 };
 

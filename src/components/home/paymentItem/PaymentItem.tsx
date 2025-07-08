@@ -5,8 +5,8 @@ import { FaTrash } from "react-icons/fa6";
 import { TInvoice, TPaymentItem } from "@/types/types";
 
 type Props = {
-  data: Omit<TInvoice, "id">;
-  setData: React.Dispatch<Omit<TInvoice, "id">>;
+  data: Omit<TInvoice, "id" | "total">;
+  setData: React.Dispatch<Omit<TInvoice, "id" | "total">>;
   index: number;
 };
 

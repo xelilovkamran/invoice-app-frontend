@@ -33,7 +33,7 @@ export const getInvoices = createAsyncThunk("invoice/getInvoices", async () => {
 
 export const postInvoice = createAsyncThunk(
   "invoice/postInvoice",
-  async (invoice: Omit<TInvoice, "id">) => {
+  async (invoice: Omit<TInvoice, "id" | "total">) => {
     const res = await api.post("/invoices/", JSON.stringify(invoice), {
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export const postInvoice = createAsyncThunk(
   }
 );
 
-export const counterSlice = createSlice({
+export const invoiceSlice = createSlice({
   name: "invoice",
   initialState,
   reducers: {
@@ -91,11 +91,25 @@ export const counterSlice = createSlice({
       postInvoice.fulfilled,
       (state, action: PayloadAction<TInvoice>) => {
         state.invoices = [...state.invoices, action.payload];
+        toast.success("Invoice created successfully :)");
+      }
+    );
+
+    builder.addCase(
+      postInvoice.rejected,
+      (
+        _state,
+        action: PayloadAction<unknown, string, unknown, CustomError>
+      ) => {
+        console.log(action);
+        action.error.message === "bad connection"
+          ? toast.error("Bad connection")
+          : toast.error("Something went wrong");
       }
     );
   },
 });
 
-export const invoiceActions = counterSlice.actions;
+export const invoiceActions = invoiceSlice.actions;
 
-export default counterSlice.reducer;
+export default invoiceSlice.reducer;

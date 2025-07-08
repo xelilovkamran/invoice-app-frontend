@@ -21,7 +21,7 @@ export const useInvoiceActions = () => {
 
   const getInvoicesAction = () => dispatch(getInvoices());
 
-  const postInvoiceAction = (invoice: Omit<TInvoice, "id">) =>
+  const postInvoiceAction = (invoice: Omit<TInvoice, "id" | "total">) =>
     dispatch(postInvoice(invoice));
 
   return {

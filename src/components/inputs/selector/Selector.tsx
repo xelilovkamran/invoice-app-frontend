@@ -6,8 +6,8 @@ import { FaAngleDown } from "react-icons/fa6";
 import { TInvoice } from "@/types/types";
 
 type Props = {
-  onChange: React.Dispatch<Omit<TInvoice, "id">>;
-  formData: Omit<TInvoice, "id">;
+  onChange: React.Dispatch<Omit<TInvoice, "id" | "total">>;
+  formData: Omit<TInvoice, "id" | "total">;
   value: number;
 };
 
